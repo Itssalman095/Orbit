@@ -1,0 +1,63 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "RRRex",
+  "version": "1.0.0",
+  "identifier": "com.rrrex.launcher",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:5173",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [
+      {
+        "label": "settings",
+        "title": "RRRex Settings",
+        "url": "index.html",
+        "width": 1000,
+        "height": 720,
+        "minWidth": 780,
+        "minHeight": 600,
+        "visible": false,
+        "resizable": true,
+        "center": true
+      },
+      {
+        "label": "overlay",
+        "title": "RRRex Overlay",
+        "url": "index.html",
+        "width": 360,
+        "height": 360,
+        "visible": false,
+        "decorations": false,
+        "transparent": true,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "focus": false,
+        "shadow": false,
+        "resizable": false,
+        "maximizable": false,
+        "minimizable": false,
+        "closable": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src ipc: http://ipc.localhost; object-src 'none'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "category": "Utility",
+    "shortDescription": "Radial application launcher for Windows",
+    "longDescription": "RRRex is a lightweight radial application launcher for Windows. Hold the middle mouse button anywhere, move toward an application and release to launch it.",
+    "icon": ["icons/icon.ico"],
+    "windows": {
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper"
+      }
+    }
+  }
+}

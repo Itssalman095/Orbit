@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Core permissions required by both windows. Window management, mouse hooks and process launching all happen in Rust; the webview only needs core event/invoke access.",
+  "windows": ["settings", "overlay"],
+  "permissions": ["core:default"]
+}

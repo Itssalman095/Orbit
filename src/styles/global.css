@@ -1,0 +1,78 @@
+/* Global reset, theme tokens, shared primitives. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  user-select: none;
+  cursor: default;
+}
+
+/* Dark tokens are the default; light theme overrides below. */
+:root,
+[data-theme="dark"] {
+  --accent: #4f9cff;
+  --accent-soft: rgba(79, 156, 255, 0.16);
+  --accent-glow: rgba(79, 156, 255, 0.5);
+
+  --bg-app: #0e1117;
+  --bg-panel: #0b0e14;
+  --bg-panel-2: #131826;
+  --bg-panel-3: #1b2130;
+  --bg-input: #141926;
+  --border: #1d2330;
+  --border-strong: #273044;
+
+  --text: #e8ecf4;
+  --text-dim: #8b94a7;
+  --text-faint: #66708a;
+
+  --danger: #ff5f6d;
+  --ok: #3ecf8e;
+}
+
+[data-theme="light"] {
+  --bg-app: #eef1f7;
+  --bg-panel: #f7f9fd;
+  --bg-panel-2: #ffffff;
+  --bg-panel-3: #f0f3f9;
+  --bg-input: #ffffff;
+  --border: #d7dce8;
+  --border-strong: #c4cbd9;
+
+  --text: #1c2430;
+  --text-dim: #5b6577;
+  --text-faint: #8a93a6;
+
+  --accent-soft: rgba(47, 117, 220, 0.14);
+  --accent-glow: rgba(47, 117, 220, 0.4);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+button {
+  font-family: inherit;
+}
