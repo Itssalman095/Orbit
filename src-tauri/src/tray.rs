@@ -4,6 +4,9 @@ use tauri::menu::{CheckMenuItem, MenuBuilder};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
 use tauri::{AppHandle, Emitter, Manager};
 
+// Wry is the desktop runtime; used for the CheckMenuItem handle type.
+use tauri::Wry;
+
 use crate::state;
 
 pub fn create(app: &AppHandle) -> tauri::Result<()> {
@@ -36,7 +39,7 @@ pub fn create(app: &AppHandle) -> tauri::Result<()> {
     let mut builder = TrayIconBuilder::with_id("main-tray")
         .menu(&menu)
         .show_menu_on_left_click(false)
-        .tooltip("RRRex — radial launcher (hold the middle mouse button)");
+        .tooltip("Orbit — radial launcher (hold the middle mouse button)");
     if let Some(icon) = app.default_window_icon() {
         builder = builder.icon(icon.clone());
     }
@@ -111,6 +114,3 @@ pub fn toggle_settings(app: &AppHandle) {
         }
     }
 }
-
-// Wry is the desktop runtime; used for the CheckMenuItem handle type.
-use tauri::Wry;

@@ -1,8 +1,8 @@
 {
-  "name": "rrrex",
+  "name": "orbit",
   "private": true,
   "version": "1.0.0",
-  "description": "RRRex — a radial application launcher for Windows",
+  "description": "Orbit — a radial application launcher for Windows",
   "type": "module",
   "scripts": {
     "dev": "vite",

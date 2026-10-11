@@ -1,4 +1,4 @@
-# End-to-end verification using the app's simulation harness (RRREX_SIMULATE=1).
+# End-to-end verification using the app's simulation harness (ORBIT_SIMULATE=1).
 #
 # The dev workstation used for CI-style verification silently drops SendInput
 # and never delivers low-level hook callbacks (verified independently with
@@ -12,7 +12,7 @@
 # selection changes -> move onto item 0 -> up -> verify launch + close.
 
 param(
-    [string]$Exe = (Join-Path $PSScriptRoot "..\src-tauri\target\release\rrrex.exe"),
+    [string]$Exe = (Join-Path $PSScriptRoot "..\src-tauri\target\release\orbit.exe"),
     [string]$ChildExe = "notepad.exe",
     [int]$MaxWaitSec = 20
 )
@@ -21,7 +21,38 @@ $ErrorActionPreference = "Continue"
 $childProcName = [System.IO.Path]::GetFileNameWithoutExtension($ChildExe)
 $appProcName = [System.IO.Path]::GetFileNameWithoutExtension($Exe)
 
-$logFile = Join-Path $env:APPDATA "com.rrrex.launcher\rrrex.log"
+# Hermetic run: a scratch config directory keeps the harness away from the
+# user's real configuration (the app honours ORBIT_CONFIG_DIR).
+$scratchDir = Join-Path $env:TEMP "orbit-verify-config"
+if (Test-Path $scratchDir) { Remove-Item $scratchDir -Recurse -Force -ErrorAction SilentlyContinue }
+New-Item -ItemType Directory -Force $scratchDir | Out-Null
+@'
+{
+  "version": 1,
+  "settings": {
+    "enabled": true,
+    "trigger": "middle",
+    "radius": 140,
+    "iconSize": 56,
+    "deadZoneRadius": 30,
+    "startAngleDeg": -90,
+    "animationSpeed": 120,
+    "theme": "dark",
+    "menuOpacity": 0.9,
+    "selectionGlow": true,
+    "hysteresisDeg": 2.5,
+    "launchOnRelease": true,
+    "stickyWhenNoSelection": false,
+    "startWithWindows": false,
+    "startMinimized": true
+  },
+  "applications": [
+    { "id": "verify-notepad", "name": "Notepad", "executablePath": "C:\\Windows\\System32\\notepad.exe", "enabled": true }
+  ]
+}
+'@ | Set-Content (Join-Path $scratchDir "config.json") -Encoding ascii
+
+$logFile = Join-Path $scratchDir "orbit.log"
 
 function Wait-Log([string]$pattern, [int]$waitSec) {
     $deadline = (Get-Date).AddSeconds($waitSec)
@@ -35,7 +66,7 @@ function Wait-Log([string]$pattern, [int]$waitSec) {
     return $null
 }
 
-Write-Output "=== RRRex end-to-end verification (simulated input) ==="
+Write-Output "=== Orbit end-to-end verification (simulated input) ==="
 
 if (-not (Test-Path $Exe)) { Write-Output "FAIL: exe not found: $Exe"; exit 1 }
 
@@ -50,7 +81,8 @@ $psi.Arguments = "--hidden"
 $psi.UseShellExecute = $false
 $psi.RedirectStandardInput = $true
 $psi.RedirectStandardOutput = $true
-$psi.EnvironmentVariables["RRREX_SIMULATE"] = "1"
+$psi.EnvironmentVariables["ORBIT_SIMULATE"] = "1"
+$psi.EnvironmentVariables["ORBIT_CONFIG_DIR"] = $scratchDir
 $proc = [System.Diagnostics.Process]::Start($psi)
 
 $ready = Wait-Log "overlay webview ready" $MaxWaitSec
@@ -115,16 +147,17 @@ $noLaunchAfterDead = -not (Select-String -Path $logFile -Pattern "launch request
 Write-Output "[ok] dead-zone release closed the menu without a second launch"
 
 # --- Cleanup ------------------------------------------------------------------
+Write-Output ""
+Write-Output "=== Full log of the session: ==="
+if (Test-Path $logFile) { Get-Content $logFile }
+
 function Cleanup {
     if ($child) { Stop-Process -Id $child.Id -Force -ErrorAction SilentlyContinue }
     Get-Process -Name $appProcName -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
     Start-Sleep -Milliseconds 400
+    if (Test-Path $scratchDir) { Remove-Item $scratchDir -Recurse -Force -ErrorAction SilentlyContinue }
 }
 Cleanup
-
-Write-Output ""
-Write-Output "=== Full log of the session: ==="
-Get-Content $logFile
 
 $passed = $launchLine -and $child -and $closedLine
 if ($passed) {

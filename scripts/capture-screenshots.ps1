@@ -3,18 +3,18 @@
 # screenshots the overlay region + the settings window.
 
 param(
-    [string]$Exe = (Join-Path $PSScriptRoot "..\src-tauri\target\release\rrrex.exe"),
-    [string]$OutDir = "$env:TEMP\rrrex-shots"
+    [string]$Exe = (Join-Path $PSScriptRoot "..\src-tauri\target\release\orbit.exe"),
+    [string]$OutDir = "$env:TEMP\orbit-shots"
 )
 
 $ErrorActionPreference = "Continue"
 Add-Type -AssemblyName System.Drawing
 Add-Type -AssemblyName System.Windows.Forms
 
-$logFile = Join-Path $env:APPDATA "com.rrrex.launcher\rrrex.log"
+$logFile = Join-Path $env:APPDATA "com.orbit.launcher\orbit.log"
 New-Item -ItemType Directory -Force $OutDir | Out-Null
 
-Get-Process -Name rrrex -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+Get-Process -Name orbit -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
 Start-Sleep -Milliseconds 400
 Remove-Item $logFile -ErrorAction SilentlyContinue
 
@@ -23,7 +23,7 @@ $psi.FileName = $Exe
 $psi.Arguments = "--hidden"
 $psi.UseShellExecute = $false
 $psi.RedirectStandardInput = $true
-$psi.EnvironmentVariables["RRREX_SIMULATE"] = "1"
+$psi.EnvironmentVariables["ORBIT_SIMULATE"] = "1"
 $proc = [System.Diagnostics.Process]::Start($psi)
 
 # wait for readiness
@@ -73,5 +73,5 @@ Shoot 0 0 [System.Windows.Forms.Screen]::PrimaryScreen.Bounds.Width [System.Wind
 $proc.StandardInput.WriteLine(('{{"kind":"up","x":{0},"y":{1}}}' -f ($mcx - 90), ($mcy + 90)))
 Start-Sleep -Milliseconds 800
 Get-Process -Name notepad -ErrorAction SilentlyContinue | Stop-Process -Force
-Get-Process -Name rrrex -ErrorAction SilentlyContinue | Stop-Process -Force
+Get-Process -Name orbit -ErrorAction SilentlyContinue | Stop-Process -Force
 Write-Output "done"

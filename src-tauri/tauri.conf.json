@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "RRRex",
+  "productName": "Orbit",
   "version": "1.0.0",
-  "identifier": "com.rrrex.launcher",
+  "identifier": "com.orbit.launcher",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:5173",
@@ -14,7 +14,7 @@
     "windows": [
       {
         "label": "settings",
-        "title": "RRRex Settings",
+        "title": "Orbit Settings",
         "url": "index.html",
         "width": 1000,
         "height": 720,
@@ -26,7 +26,7 @@
       },
       {
         "label": "overlay",
-        "title": "RRRex Overlay",
+        "title": "Orbit Overlay",
         "url": "index.html",
         "width": 360,
         "height": 360,
@@ -52,7 +52,7 @@
     "targets": ["nsis"],
     "category": "Utility",
     "shortDescription": "Radial application launcher for Windows",
-    "longDescription": "RRRex is a lightweight radial application launcher for Windows. Hold the middle mouse button anywhere, move toward an application and release to launch it.",
+    "longDescription": "Orbit is a lightweight radial application launcher for Windows. Hold the middle mouse button anywhere, move toward an application and release to launch it.",
     "icon": ["icons/icon.ico"],
     "windows": {
       "webviewInstallMode": {

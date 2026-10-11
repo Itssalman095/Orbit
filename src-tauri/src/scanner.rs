@@ -1,9 +1,9 @@
-//! Installed-app discovery.
+﻿//! Installed-app discovery.
 //!
 //! Scans the Windows Start Menu and Desktop shortcut folders (`.lnk` files)
 //! so the settings UI can offer a searchable "your installed apps" catalog
 //! instead of forcing users to hunt for executable paths. `.lnk` files are
-//! first-class launch targets in RRRex (resolved via ShellExecuteEx and the
+//! first-class launch targets in Orbit (resolved via ShellExecuteEx and the
 //! shell icon factory), so a Start Menu shortcut is all we need.
 
 use std::collections::HashSet;
@@ -145,7 +145,7 @@ mod tests {
 
     fn temp_tree(tag: &str) -> PathBuf {
         let dir = std::env::temp_dir().join(format!(
-            "rrrex-scan-{}-{}",
+            "orbit-scan-{}-{}",
             tag,
             std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
@@ -228,7 +228,7 @@ mod tests {
     #[test]
     fn empty_roots_give_empty_catalog() {
         assert!(scan_roots(&[]).is_empty());
-        let missing = PathBuf::from(r"C:\definitely\does\not\exist-rrrex");
+        let missing = PathBuf::from(r"C:\definitely\does\not\exist-orbit");
         assert!(scan_roots(&[missing]).is_empty());
     }
 }

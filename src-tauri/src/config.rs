@@ -393,7 +393,7 @@ mod tests {
     use serde_json::json;
 
     fn temp_dir() -> PathBuf {
-        let dir = std::env::temp_dir().join(format!("rrrex-test-{}", std::process::id()));
+        let dir = std::env::temp_dir().join(format!("orbit-test-{}", std::process::id()));
         let sub = dir.join(format!(
             "cfg-{:x}",
             std::time::SystemTime::now()

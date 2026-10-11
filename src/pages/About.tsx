@@ -12,14 +12,14 @@ export function AboutPage() {
 
   return (
     <div className="section">
-      <h2>RRRex</h2>
+      <h2>Orbit</h2>
       <p className="section-desc">
         A radial application launcher for Windows. Version {version}.
       </p>
 
       <h3>How to use</h3>
       <ol className="about-list">
-        <li>Keep RRRex running — it lives in the system tray.</li>
+        <li>Keep Orbit running — it lives in the system tray.</li>
         <li>
           Press and hold the <span className="kbd">middle mouse button</span> anywhere in Windows.
         </li>
@@ -40,7 +40,7 @@ export function AboutPage() {
       <ul className="about-list">
         <li>
           If the menu stops appearing, some heavy utility may have installed a conflicting mouse
-          hook — restart RRRex from the tray menu (Reload configuration) or restart Windows.
+          hook — restart Orbit from the tray menu (Reload configuration) or restart Windows.
         </li>
         <li>
           While the launcher is enabled, the activation button is captured globally; disable the

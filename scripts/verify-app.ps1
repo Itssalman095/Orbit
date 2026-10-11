@@ -1,4 +1,4 @@
-# End-to-end verification harness for RRRex on Windows.
+# End-to-end verification harness for Orbit on Windows.
 #
 # Drives the real application with SendInput:
 #   1. makes this PowerShell process Per-Monitor-V2 DPI aware (physical px)
@@ -12,7 +12,7 @@
 # Usage: powershell -ExecutionPolicy Bypass -File scripts\verify-app.ps1 [-Exe <path>]
 
 param(
-    [string]$Exe = (Join-Path $PSScriptRoot "..\src-tauri\target\release\rrrex.exe"),
+    [string]$Exe = (Join-Path $PSScriptRoot "..\src-tauri\target\release\orbit.exe"),
     [string]$ChildExe = "notepad.exe",
     [int]$MaxWaitSec = 15
 )
@@ -62,7 +62,7 @@ public static class NativeInput {
 # DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 = -4
 [void][NativeInput]::SetProcessDpiAwarenessContext([IntPtr](-4))
 
-$logFile = Join-Path $env:APPDATA "com.rrrex.launcher\rrrex.log"
+$logFile = Join-Path $env:APPDATA "com.orbit.launcher\orbit.log"
 
 function Log-Tail([string]$pattern, [int]$waitSec) {
     $deadline = (Get-Date).AddSeconds($waitSec)
@@ -76,7 +76,7 @@ function Log-Tail([string]$pattern, [int]$waitSec) {
     return $null
 }
 
-Write-Output "=== RRRex end-to-end verification ==="
+Write-Output "=== Orbit end-to-end verification ==="
 Write-Output "exe: $Exe"
 Write-Output "log: $logFile"
 
@@ -92,7 +92,7 @@ Start-Process -FilePath $Exe
 $bootLine = Log-Tail "overlay webview ready" $MaxWaitSec
 if (-not $bootLine) {
     Write-Output "FAIL: app did not signal overlay ready"
-    Get-Process -Name "rrrex" -ErrorAction SilentlyContinue | Stop-Process -Force
+    Get-Process -Name $appProcName -ErrorAction SilentlyContinue | Stop-Process -Force
     exit 1
 }
 Write-Output "[ok] app started, overlay webview ready"
@@ -120,7 +120,7 @@ if (-not $openLine) {
     $up.type = [NativeInput]::INPUT_MOUSE
     $up.mi.dwFlags = [NativeInput]::MOUSEEVENTF_MIDDLEUP
     [void][NativeInput]::SendInput(1, @($up), [System.Runtime.InteropServices.Marshal]::SizeOf([type][NativeInput+INPUT]))
-    Get-Process -Name "rrrex" -ErrorAction SilentlyContinue | Stop-Process -Force
+    Get-Process -Name $appProcName -ErrorAction SilentlyContinue | Stop-Process -Force
     exit 1
 }
 Write-Output "[ok] trigger down detected by the global hook: $openLine"

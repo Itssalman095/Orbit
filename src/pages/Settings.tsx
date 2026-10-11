@@ -57,19 +57,19 @@ export function GeneralSection({
 
       <Toggle
         label="Start minimized"
-        hint="When RRRex starts automatically, stay in the tray without opening this window."
+        hint="When Orbit starts automatically, stay in the tray without opening this window."
         checked={settings.startMinimized}
         disabled={!settings.startWithWindows}
         onChange={(v) => onSettingsChange({ startMinimized: v })}
       />
 
       <div className="callout">
-        Closing this window keeps RRRex running in the system tray. Use{" "}
+        Closing this window keeps Orbit running in the system tray. Use{" "}
         <span className="kbd">Quit</span> in the tray menu to exit.
       </div>
 
       <button type="button" className="btn" onClick={onOpenAbout}>
-        About RRRex
+        About Orbit
       </button>
     </div>
   );

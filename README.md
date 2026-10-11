@@ -1,8 +1,8 @@
-# RRRex — a radial application launcher for Windows
+# Orbit — a radial application launcher for Windows
 
-Hold the middle mouse button anywhere in Windows, move toward an application, release to launch. RRRex lives in the system tray and appears around your cursor in a fraction of a second.
+Hold the middle mouse button anywhere in Windows, move toward an application, release to launch. Orbit lives in the system tray and appears around your cursor in a fraction of a second.
 
-![RRRex](src-tauri/app-icon.png)
+![Orbit](src-tauri/app-icon.png)
 
 ## Features
 
@@ -20,11 +20,11 @@ Hold the middle mouse button anywhere in Windows, move toward an application, re
 
 ## Install
 
-Run the NSIS installer produced by the Tauri bundler (`RRRex_1.0.0_x64-setup.exe`) or see **Build** below. Windows 10/11 x64 with WebView2 Runtime (installed on demand by the installer).
+Run the NSIS installer produced by the Tauri bundler (`Orbit_1.0.0_x64-setup.exe`) or see **Build** below. Windows 10/11 x64 with WebView2 Runtime (installed on demand by the installer).
 
 ## Usage
 
-1. RRRex starts in the tray. Open **Settings** from the tray (left-click the tray icon) to add applications.
+1. Orbit starts in the tray. Open **Settings** from the tray (left-click the tray icon) to add applications.
 2. Press and hold the **middle mouse button** anywhere.
 3. Move toward an item and release to launch. Release over the center (or outside the ring) to dismiss.
 
@@ -84,7 +84,7 @@ npm run verify        # end-to-end test on Windows (see below)
    ├─ commands.rs                # Tauri IPC commands (narrow surface)
    ├─ tray.rs                    # tray icon + context menu
    ├─ state.rs                   # process-wide shared state
-   └─ logger.rs                  # file logging (AppData/com.rrrex.launcher/rrrex.log)
+   └─ logger.rs                  # file logging (AppData/com.orbit.launcher/orbit.log)
 ```
 
 ### Input pipeline (the important part)
@@ -103,7 +103,7 @@ The process is forced to Per-Monitor-V2 DPI awareness at startup, so hook coordi
 
 ### Persistence
 
-`%APPDATA%\com.rrrex.launcher\config.json` — validated and sanitized on load (corrupt files are backed up as `config.corrupt.json` and defaults are used), written atomically (temp file + rename). Extracted icons are cached under `%APPDATA%\com.rrrex.launcher\icons\`.
+`%APPDATA%\com.orbit.launcher\config.json` — validated and sanitized on load (corrupt files are backed up as `config.corrupt.json` and defaults are used), written atomically (temp file + rename). Extracted icons are cached under `%APPDATA%\com.orbit.launcher\icons\`. Configuration from earlier "RRRex" builds migrates automatically on first run.
 
 ### Security
 
@@ -119,14 +119,14 @@ The process is forced to Per-Monitor-V2 DPI awareness at startup, so hook coordi
 - **42 frontend unit tests** (vitest): angle normalization, item positioning for 4/6/8/12 items, sector selection, boundaries, dead zone, hysteresis (including wrap-around), hit testing, config sanitization/clamping/dedup, command-line splitting.
 - **41 Rust unit tests** (cargo test): mirror of the selection math, work-area clamping (incl. secondary monitors, tiny work areas), config sanitize/persist/roundtrip/corruption recovery, menu open/scale/clamp/selection/throttle, release decisions, sticky click routing, launcher validation (missing executable, invalid working directory).
 - `tsc --noEmit` (strict), ESLint, `cargo fmt --check`, `cargo clippy -D warnings`.
-- **`npm run verify`** — end-to-end harness that drives the real release binary through its debug simulation input (RRREX_SIMULATE=1) and asserts the whole pipeline: menu open with DPI-correct geometry, overlay shown via the rendered-ack path, selection tracking, release → the selected application **actually launches** (Win32), and instant close; plus a dead-zone release that closes without launching. This harness exists because the dev workstation used for verification silently drops SendInput and never delivers low-level-hook callbacks (see below), which rules out OS-level input injection there.
+- **`npm run verify`** — end-to-end harness that drives the real release binary through its debug simulation input (ORBIT_SIMULATE=1) and asserts the whole pipeline: menu open with DPI-correct geometry, overlay shown via the rendered-ack path, selection tracking, release → the selected application **actually launches** (Win32), and instant close; plus a dead-zone release that closes without launching. This harness exists because the dev workstation used for verification silently drops SendInput and never delivers low-level-hook callbacks (see below), which rules out OS-level input injection there.
 - **`npm run verify:input`** — the same end-to-end flow driven by real `SendInput` mouse events, for machines that allow input injection (typical home machines). On the dev workstation this harness cannot work: `SendInput` events are accepted into the input stream (GetLastInputInfo updates) but are never applied to the cursor and never reach *any* `WH_MOUSE_LL` hook — verified independently with a known-good C# hook (`scripts/csharp-hook-test.ps1`) and a minimal Rust probe (`src-tauri/src/bin/hook_probe.rs`). The launcher's own hook code follows the canonical pattern exactly and fails identically to the reference probes on that machine, i.e. the block is environmental.
 
 ### What still needs a human hand (2 minutes, on a normal desktop)
 
 Because low-level hook delivery could not be exercised by synthetic input on the dev machine, verify once by hand:
 
-1. Build/start the app (`npm run tauri build` output or `target\release\rrrex.exe`).
+1. Build/start the app (`npm run tauri build` output or `target\release\orbit.exe`).
 2. Click into any other application (e.g. a browser).
 3. Press and hold the **middle mouse button** → the radial menu must appear around the cursor.
 4. Move toward an item → it must highlight; the underlying app must not receive the click.

@@ -1,4 +1,4 @@
-//! Global mouse hook (`WH_MOUSE_LL`) — the heart of the launcher.
+﻿//! Global mouse hook (`WH_MOUSE_LL`) — the heart of the launcher.
 //!
 //! Design:
 //! - A dedicated thread owns the hook and its message pump (LL hooks require
@@ -17,9 +17,9 @@
 //!   pointer routing while a menu is visible.
 //!
 //! Limitations (documented): a low-level hook callback has a system timeout
-//! (`LowLevelHooksTimeout`, ~300 ms default); our callback is O(µs) so this
+//! (`LowLevelHooksTimeout`, ~300 ms default); our callback is O(Âµs) so this
 //! is not an issue in practice. If a heavy third-party hook stalls input
-//! delivery, Windows may drop the slowest hook — restarting RRRex re-arms it.
+//! delivery, Windows may drop the slowest hook — restarting Orbit re-arms it.
 
 use std::sync::atomic::{AtomicIsize, AtomicU32, Ordering};
 use std::sync::mpsc;
@@ -70,7 +70,7 @@ pub fn install(app: AppHandle) -> bool {
 
     let (tx, rx) = mpsc::channel::<bool>();
     let spawned = std::thread::Builder::new()
-        .name("rrrex-mouse-hook".into())
+        .name("orbit-mouse-hook".into())
         .spawn(move || hook_thread(tx));
     if spawned.is_err() {
         crate::logger::error("failed to spawn mouse hook thread");
@@ -104,7 +104,7 @@ pub fn uninstall() {
 // Simulation harness (debug/test only)
 // ---------------------------------------------------------------------------
 
-/// When RRREX_SIMULATE=1 is set, a background thread reads JSON lines from
+/// When ORBIT_SIMULATE=1 is set, a background thread reads JSON lines from
 /// stdin and feeds them through the same input state machine as the real
 /// hook: {"kind":"down"|"up"|"move"|"ldown","x":960,"y":540}.
 ///
@@ -116,12 +116,12 @@ pub fn uninstall() {
 /// real windows and real process launching. It is inert unless the env var
 /// is set and stdin is attached.
 pub fn start_simulation_listener() {
-    if std::env::var("RRREX_SIMULATE").is_err() {
+    if std::env::var("ORBIT_SIMULATE").is_err() {
         return;
     }
-    crate::logger::warn("SIMULATION MODE enabled (RRREX_SIMULATE=1): reading events from stdin");
+    crate::logger::warn("SIMULATION MODE enabled (ORBIT_SIMULATE=1): reading events from stdin");
     std::thread::Builder::new()
-        .name("rrrex-sim".into())
+        .name("orbit-sim".into())
         .spawn(|| {
             use std::io::BufRead;
             let stdin = std::io::stdin();
@@ -396,7 +396,7 @@ fn open_menu(
 
     let show = crate::menu::MenuShowDto {
         empty_hint: if apps_dto.is_empty() {
-            Some("No apps configured\nOpen RRRex settings to add apps".to_string())
+            Some("No apps configured\nOpen Orbit settings to add apps".to_string())
         } else {
             None
         },

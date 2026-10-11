@@ -72,7 +72,7 @@ export function SettingsWindow() {
           <div className="brand-mark" aria-hidden="true">
             <span />
           </div>
-          <div className="brand-name">RRRex</div>
+          <div className="brand-name">Orbit</div>
         </div>
         <nav className="nav" aria-label="Settings sections">
           {TABS.map((t) => (
@@ -91,7 +91,7 @@ export function SettingsWindow() {
             {settings.enabled ? "Launcher active" : "Launcher disabled"}
           </div>
           <button type="button" className="btn btn-quit" onClick={() => void ipc.quitApp()}>
-            Quit RRRex
+            Quit Orbit
           </button>
         </div>
       </aside>

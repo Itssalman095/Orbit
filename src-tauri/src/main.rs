@@ -1,4 +1,4 @@
-//! RRRex — a radial application launcher for Windows.
+//! Orbit — a radial application launcher for Windows.
 //!
 //! Process layout:
 //! - main thread: tauri event loop, window management, tray
@@ -34,7 +34,61 @@ use std::sync::atomic::Ordering;
 use tauri::{Listener, Manager, RunEvent, WindowEvent};
 
 /// Must match `bundle.identifier` in tauri.conf.json.
-const APP_IDENTIFIER: &str = "com.rrrex.launcher";
+const APP_IDENTIFIER: &str = "com.orbit.launcher";
+
+/// The pre-rename data directory; migrated on first run (see
+/// `migrate_rrrex_data`).
+const LEGACY_IDENTIFIER: &str = "com.rrrex.launcher";
+
+fn app_config_dir() -> PathBuf {
+    // Test-isolation knob: point the app at a scratch config directory
+    // (used by scripts/verify-app-simulated.ps1 so harness runs never touch
+    // real user data).
+    if let Ok(dir) = std::env::var("ORBIT_CONFIG_DIR") {
+        if !dir.is_empty() {
+            return PathBuf::from(dir);
+        }
+    }
+    let base = std::env::var("APPDATA").unwrap_or_else(|_| {
+        // Extremely defensive: relative dir if the env var is missing.
+        ".".to_string()
+    });
+    PathBuf::from(base).join(APP_IDENTIFIER)
+}
+
+/// One-time migration from the pre-rename data folder (RRRex) so settings,
+/// applications and cached icons carry over to Orbit.
+fn migrate_rrrex_data(config_dir: &std::path::Path) {
+    if config_dir.join(config::CONFIG_FILE).exists() {
+        return; // already migrated (or new install with fresh config)
+    }
+    let Some(base) = std::env::var_os("APPDATA") else {
+        return;
+    };
+    let legacy = PathBuf::from(base).join(LEGACY_IDENTIFIER);
+    let legacy_cfg = legacy.join(config::CONFIG_FILE);
+    if !legacy_cfg.is_file() {
+        return;
+    }
+    let _ = std::fs::create_dir_all(config_dir);
+    if std::fs::copy(&legacy_cfg, config_dir.join(config::CONFIG_FILE)).is_ok() {
+        crate::logger::info("migrated configuration from the legacy RRRex data folder");
+    }
+    // Cached icons are cheap to re-extract, but copying avoids the wait.
+    let legacy_icons = legacy.join("icons");
+    let new_icons = config_dir.join("icons");
+    if legacy_icons.is_dir() {
+        let _ = std::fs::create_dir_all(&new_icons);
+        if let Ok(entries) = std::fs::read_dir(&legacy_icons) {
+            for entry in entries.flatten() {
+                let target = new_icons.join(entry.file_name());
+                if !target.exists() {
+                    let _ = std::fs::copy(entry.path(), target);
+                }
+            }
+        }
+    }
+}
 
 /// Builds the shared state before any webview can issue commands.
 ///
@@ -44,14 +98,12 @@ const APP_IDENTIFIER: &str = "com.rrrex.launcher";
 /// The path mirrors tauri's `app_config_dir()` on Windows
 /// (%APPDATA%\<identifier>); setup verifies they agree.
 fn init_shared_state() -> std::sync::Arc<state::SharedState> {
-    let base = std::env::var("APPDATA").unwrap_or_else(|_| {
-        // Extremely defensive: relative dir if the env var is missing.
-        ".".to_string()
-    });
-    let config_dir = PathBuf::from(base).join(APP_IDENTIFIER);
+    let config_dir = app_config_dir();
     let icon_cache_dir = config_dir.join("icons");
     let _ = std::fs::create_dir_all(&config_dir);
     let _ = std::fs::create_dir_all(&icon_cache_dir);
+
+    migrate_rrrex_data(&config_dir);
 
     let cfg = config::load(&config_dir);
     std::sync::Arc::new(state::SharedState {
@@ -70,6 +122,9 @@ fn init_shared_state() -> std::sync::Arc<state::SharedState> {
 fn main() {
     win32::init_dpi_awareness();
 
+    // Logging + shared state exist before any webview can issue commands
+    // (config windows start loading before setup() runs).
+    logger::init(app_config_dir().join("orbit.log"));
     let shared = init_shared_state();
     state::init(shared.clone());
 
@@ -99,7 +154,7 @@ fn main() {
         .setup(|app| {
             let handle = app.handle().clone();
 
-            // ---- Paths & logging ------------------------------------------
+            // ---- Paths sanity check ----------------------------------------
             let tauri_config_dir = app
                 .path()
                 .app_config_dir()
@@ -112,8 +167,7 @@ fn main() {
                     st.paths.config_dir.display()
                 ));
             }
-            logger::init(st.paths.config_dir.join("rrrex.log"));
-            logger::info("RRRex starting");
+            logger::info("Orbit starting");
 
             // ---- Windows ---------------------------------------------------
             overlay::setup(&handle);
@@ -150,7 +204,7 @@ fn main() {
             // ---- Reconcile native state with the config -------------------
             commands::apply_config(&handle, state::get().config_snapshot());
 
-            // ---- Debug/test simulation harness (RRREX_SIMULATE=1) ---------
+            // ---- Debug/test simulation harness (ORBIT_SIMULATE=1) ---------
             mouse::start_simulation_listener();
 
             // ---- First-run window -----------------------------------------
@@ -190,7 +244,7 @@ fn main() {
             if let RunEvent::ExitRequested { .. } | RunEvent::Exit = event {
                 // Graceful shutdown: release the mouse hook before exit.
                 mouse::uninstall();
-                logger::info("RRRex exited cleanly");
+                logger::info("Orbit exited cleanly");
             }
         });
 }

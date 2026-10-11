@@ -105,7 +105,7 @@ fn resize_fit(img: &image::DynamicImage, max: u32) -> image::RgbaImage {
 fn extract_shell_icon(path: &str) -> Option<Vec<u8>> {
     let owned = path.to_string();
     let handle = std::thread::Builder::new()
-        .name("rrrex-icon-extract".into())
+        .name("orbit-icon-extract".into())
         .spawn(move || unsafe { com_extract(&owned) })
         .ok()?;
     handle.join().ok().flatten()

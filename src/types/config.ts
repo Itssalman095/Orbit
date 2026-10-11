@@ -1,5 +1,5 @@
 /**
- * Shared configuration types for RRRex.
+ * Shared configuration types for Orbit.
  *
  * The same shape is mirrored on the Rust side (src-tauri/src/config.rs)
  * and persisted as JSON in the app data directory.

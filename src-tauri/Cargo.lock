@@ -2423,6 +2423,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "04744f49eae99ab78e0d5c0b603ab218f515ea8cfe5a456d7629ad883a3b6e7d"
 
 [[package]]
+name = "orbit"
+version = "1.0.0"
+dependencies = [
+ "base64 0.22.1",
+ "image",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-autostart",
+ "tauri-plugin-dialog",
+ "tauri-plugin-single-instance",
+ "windows",
+]
+
+[[package]]
 name = "ordered-stream"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2900,22 +2916,6 @@ dependencies = [
  "wasm-bindgen-futures",
  "web-sys",
  "windows-sys 0.60.2",
-]
-
-[[package]]
-name = "rrrex"
-version = "1.0.0"
-dependencies = [
- "base64 0.22.1",
- "image",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-autostart",
- "tauri-plugin-dialog",
- "tauri-plugin-single-instance",
- "windows",
 ]
 
 [[package]]

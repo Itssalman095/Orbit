@@ -1,12 +1,12 @@
 [package]
-name = "rrrex"
+name = "orbit"
 version = "1.0.0"
-description = "RRRex — a radial application launcher for Windows"
-authors = ["RRRex contributors"]
+description = "Orbit — a radial application launcher for Windows"
+authors = ["Orbit contributors"]
 license = "MIT"
 edition = "2021"
 rust-version = "1.80"
-default-run = "rrrex"
+default-run = "orbit"
 
 [features]
 # Used for production builds (embedded frontend assets instead of devUrl).
