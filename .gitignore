@@ -1,18 +1,3 @@
-# Dependencies
-node_modules/
-
-# Build output
-dist/
-src-tauri/target/
-src-tauri/gen/
-
-# Logs
-*.log
-
-# Editor
-.vscode/
-.idea/
-
-# OS
-Thumbs.db
-.DS_Store
+﻿node_modules
+dist
+src-tauri/target
