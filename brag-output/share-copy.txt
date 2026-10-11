@@ -1,0 +1,1 @@
+I replaced my taskbar with one mouse button. Orbit is a radial launcher for Windows — hold middle-click anywhere (even over another app), flick toward the one you want, release, and it's open. Native Rust hook, zero focus steal, launches in one gesture.

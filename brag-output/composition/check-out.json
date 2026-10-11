@@ -1,0 +1,832 @@
+{
+  "ok": false,
+  "strict": false,
+  "browserSkipped": false,
+  "lint": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 5,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "composition_file_too_large",
+        "severity": "warning",
+        "message": "This HTML composition file has 315 lines. Smaller sub-compositions are easier to read, iterate on, and diff.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\furka\\Downloads\\salman\\Projects\\Orbit\\brag-output\\composition\\index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Split coherent scenes or layers into separate .html files under compositions/, then mount them from the parent with data-composition-src so each file stays small enough to inspect, revise, and validate independently."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<section id=\"s1\"> is a timeline element that contains nested <div id=\"s1-inner\">. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#s1",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\furka\\Downloads\\salman\\Projects\\Orbit\\brag-output\\composition\\index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <section id=\"s1\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<section id=\"s2\"> is a timeline element that contains nested <div id=\"s2-inner\">. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#s2",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\furka\\Downloads\\salman\\Projects\\Orbit\\brag-output\\composition\\index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <section id=\"s2\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<section id=\"s3\"> is a timeline element that contains nested <div id=\"s3-inner\">. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#s3",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\furka\\Downloads\\salman\\Projects\\Orbit\\brag-output\\composition\\index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <section id=\"s3\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<section id=\"s4\"> is a timeline element that contains nested <div id=\"s4-inner\">. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#s4",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\furka\\Downloads\\salman\\Projects\\Orbit\\brag-output\\composition\\index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <section id=\"s4\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      }
+    ],
+    "filesScanned": 1
+  },
+  "runtime": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 10,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-click-1\" is 0.01s but its slot (data-duration) is 0.50s — the slot is shortened to the media length when rendered. Set data-duration to ~0.01s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "orbit-brag",
+          "data-start": "0",
+          "data-width": "1920",
+          "data-height": "1080",
+          "data-duration": "20"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-bloom-1\" is 0.12s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.12s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "orbit-brag",
+          "data-start": "0",
+          "data-width": "1920",
+          "data-height": "1080",
+          "data-duration": "20"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-snap-1\" is 0.06s but its slot (data-duration) is 0.40s — the slot is shortened to the media length when rendered. Set data-duration to ~0.06s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "orbit-brag",
+          "data-start": "0",
+          "data-width": "1920",
+          "data-height": "1080",
+          "data-duration": "20"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-snap-2\" is 0.06s but its slot (data-duration) is 0.40s — the slot is shortened to the media length when rendered. Set data-duration to ~0.06s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "orbit-brag",
+          "data-start": "0",
+          "data-width": "1920",
+          "data-height": "1080",
+          "data-duration": "20"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-release-1\" is 0.15s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.15s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "orbit-brag",
+          "data-start": "0",
+          "data-width": "1920",
+          "data-height": "1080",
+          "data-duration": "20"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-click-2\" is 0.01s but its slot (data-duration) is 0.50s — the slot is shortened to the media length when rendered. Set data-duration to ~0.01s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "orbit-brag",
+          "data-start": "0",
+          "data-width": "1920",
+          "data-height": "1080",
+          "data-duration": "20"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-bloom-2\" is 0.12s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.12s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "orbit-brag",
+          "data-start": "0",
+          "data-width": "1920",
+          "data-height": "1080",
+          "data-duration": "20"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-snap-3\" is 0.06s but its slot (data-duration) is 0.40s — the slot is shortened to the media length when rendered. Set data-duration to ~0.06s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "orbit-brag",
+          "data-start": "0",
+          "data-width": "1920",
+          "data-height": "1080",
+          "data-duration": "20"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-release-2\" is 0.15s but its slot (data-duration) is 0.60s — the slot is shortened to the media length when rendered. Set data-duration to ~0.15s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "orbit-brag",
+          "data-start": "0",
+          "data-width": "1920",
+          "data-height": "1080",
+          "data-duration": "20"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-logo\" is 0.13s but its slot (data-duration) is 0.80s — the slot is shortened to the media length when rendered. Set data-duration to ~0.13s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "orbit-brag",
+          "data-start": "0",
+          "data-width": "1920",
+          "data-height": "1080",
+          "data-duration": "20"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      }
+    ]
+  },
+  "layout": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 9,
+    "findings": [
+      {
+        "code": "panel_out_of_canvas",
+        "severity": "info",
+        "time": 5.556,
+        "selector": "#gr1",
+        "message": "Painted panel extends outside the composition canvas.",
+        "rect": {
+          "left": 389,
+          "top": -31,
+          "right": 1531,
+          "bottom": 1111,
+          "width": 1141.99,
+          "height": 1141.99
+        },
+        "containerSelector": "#root",
+        "text": "",
+        "fixHint": "Move the panel inward, or mark intentional off-canvas animation with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "top": 31,
+          "bottom": 31
+        },
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 389,
+          "y": -31,
+          "width": 1141.99,
+          "height": 1141.99
+        },
+        "firstSeen": 5.556,
+        "lastSeen": 18.889,
+        "occurrences": 7,
+        "heldMs": 0,
+        "times": [
+          5.556,
+          7.778,
+          10,
+          12.222,
+          14.444,
+          16.667,
+          18.889
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 7.778,
+        "selector": "#s2-menu > div:nth-of-type(4) > div:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 1163.18,
+          "top": 318,
+          "right": 1223.5,
+          "bottom": 385.28,
+          "width": 60.32,
+          "height": 67.28
+        },
+        "containerSelector": "#s2-dot",
+        "text": "SP",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 0.07,
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 1163.18,
+          "y": 318,
+          "width": 60.32,
+          "height": 67.28
+        },
+        "firstSeen": 7.778,
+        "lastSeen": 7.778,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          7.778
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 12.222,
+        "selector": "div.code > div:nth-of-type(3)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 495,
+          "top": 273,
+          "right": 963,
+          "bottom": 302,
+          "width": 468,
+          "height": 29
+        },
+        "containerSelector": "#s3-menu > div:nth-of-type(1)",
+        "text": "= (, );",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 0.2,
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 495,
+          "y": 273,
+          "width": 468,
+          "height": 29
+        },
+        "firstSeen": 12.222,
+        "lastSeen": 12.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          12.222
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 12.222,
+        "selector": "div.code > div:nth-of-type(3) > span:nth-of-type(5)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 807,
+          "top": 273,
+          "right": 937,
+          "bottom": 302,
+          "width": 130,
+          "height": 29
+        },
+        "containerSelector": "#s3-menu > div:nth-of-type(1)",
+        "text": "hysteresis",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 0.41,
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 807,
+          "y": 273,
+          "width": 130,
+          "height": 29
+        },
+        "firstSeen": 12.222,
+        "lastSeen": 12.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          12.222
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 12.222,
+        "selector": "div.code > div:nth-of-type(5)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 482,
+          "top": 361,
+          "right": 885,
+          "bottom": 390,
+          "width": 403,
+          "height": 29
+        },
+        "containerSelector": "#s3-menu > div:nth-of-type(1)",
+        "text": "=> (.);",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 0.4,
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 482,
+          "y": 361,
+          "width": 403,
+          "height": 29
+        },
+        "firstSeen": 12.222,
+        "lastSeen": 12.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          12.222
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 12.222,
+        "selector": "div.code > div:nth-of-type(5) > span:nth-of-type(4)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 729,
+          "top": 361,
+          "right": 807,
+          "bottom": 390,
+          "width": 78,
+          "height": 29
+        },
+        "containerSelector": "#s3-menu > div:nth-of-type(1)",
+        "text": "sector",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 0.3,
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 729,
+          "y": 361,
+          "width": 78,
+          "height": 29
+        },
+        "firstSeen": 12.222,
+        "lastSeen": 12.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          12.222
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 12.222,
+        "selector": "div.code > div:nth-of-type(5) > span:nth-of-type(5)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 820,
+          "top": 361,
+          "right": 859,
+          "bottom": 390,
+          "width": 39,
+          "height": 29
+        },
+        "containerSelector": "#s3-menu > div:nth-of-type(1)",
+        "text": "app",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 820,
+          "y": 361,
+          "width": 39,
+          "height": 29
+        },
+        "firstSeen": 12.222,
+        "lastSeen": 12.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          12.222
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 12.222,
+        "selector": "div.code > div:nth-of-type(7) > span:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 456,
+          "top": 449,
+          "right": 989,
+          "bottom": 478,
+          "width": 533,
+          "height": 29
+        },
+        "containerSelector": "#s3-menu > div:nth-of-type(1)",
+        "text": "// zero focus steal, any monitor, any DPI",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 0.44,
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 456,
+          "y": 449,
+          "width": 533,
+          "height": 29
+        },
+        "firstSeen": 12.222,
+        "lastSeen": 12.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          12.222
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 14.444,
+        "selector": "div.f.on",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 194,
+          "top": 182,
+          "right": 298,
+          "bottom": 209,
+          "width": 104,
+          "height": 27
+        },
+        "containerSelector": "#s3-card",
+        "text": "orbit.rs",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 0.33,
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 194,
+          "y": 182,
+          "width": 104,
+          "height": 27
+        },
+        "firstSeen": 14.444,
+        "lastSeen": 14.444,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          14.444
+        ]
+      }
+    ],
+    "duration": 20,
+    "samples": [
+      1.111,
+      3.333,
+      5.556,
+      7.778,
+      10,
+      12.222,
+      14.444,
+      16.667,
+      18.889
+    ],
+    "transitionSamples": [],
+    "transitionSamplesDropped": 0,
+    "tolerance": 2,
+    "totalIssueCount": 9,
+    "truncated": false
+  },
+  "motion": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": false,
+    "samples": 0
+  },
+  "contrast": {
+    "ok": false,
+    "errorCount": 5,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "contrast_aa_failure",
+        "severity": "error",
+        "message": "Contrast is 1.19:1; WCAG AA requires 4.5:1.",
+        "text": "let menu = open_at(cursor);",
+        "fg": "rgb(0,0,0)",
+        "bg": "rgb(19,24,38)",
+        "ratio": 1.19,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(129,129,129)",
+        "large": false,
+        "selector": "div > section:nth-of-type(3) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 456,
+          "y": 222,
+          "width": 1258,
+          "height": 44
+        },
+        "time": 10,
+        "times": [
+          10,
+          14.444
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "error",
+        "message": "Contrast is 1.19:1; WCAG AA requires 4.5:1.",
+        "text": "let sector = select(angle, hysteresis);",
+        "fg": "rgb(0,0,0)",
+        "bg": "rgb(19,24,38)",
+        "ratio": 1.19,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(129,129,129)",
+        "large": false,
+        "selector": "div > section:nth-of-type(3) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3)",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 456,
+          "y": 266,
+          "width": 1258,
+          "height": 44
+        },
+        "time": 10,
+        "times": [
+          10,
+          14.444
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "error",
+        "message": "Contrast is 1.19:1; WCAG AA requires 4.5:1.",
+        "text": "overlay.show(\"no-activate\");",
+        "fg": "rgb(0,0,0)",
+        "bg": "rgb(19,24,38)",
+        "ratio": 1.19,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(129,129,129)",
+        "large": false,
+        "selector": "div > section:nth-of-type(3) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(4)",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 456,
+          "y": 310,
+          "width": 1258,
+          "height": 44
+        },
+        "time": 10,
+        "times": [
+          10,
+          14.444
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "error",
+        "message": "Contrast is 1.19:1; WCAG AA requires 4.5:1.",
+        "text": "on release => launch(sector.app);",
+        "fg": "rgb(0,0,0)",
+        "bg": "rgb(19,24,38)",
+        "ratio": 1.19,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(129,129,129)",
+        "large": false,
+        "selector": "div > section:nth-of-type(3) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(5)",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 456,
+          "y": 354,
+          "width": 1258,
+          "height": 44
+        },
+        "time": 10,
+        "times": [
+          10,
+          14.444
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "error",
+        "message": "Contrast is 1.19:1; WCAG AA requires 4.5:1.",
+        "text": "menu.close_instant();",
+        "fg": "rgb(0,0,0)",
+        "bg": "rgb(19,24,38)",
+        "ratio": 1.19,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(129,129,129)",
+        "large": false,
+        "selector": "div > section:nth-of-type(3) > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(6)",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 456,
+          "y": 398,
+          "width": 1258,
+          "height": 44
+        },
+        "time": 10,
+        "times": [
+          10,
+          14.444
+        ]
+      }
+    ],
+    "enabled": true,
+    "samples": [
+      1.111,
+      5.556,
+      10,
+      14.444,
+      18.889
+    ],
+    "checked": 82,
+    "passed": 72
+  },
+  "hdr": {
+    "autoPromotion": null,
+    "inspection": "available"
+  },
+  "snapshots": {
+    "enabled": false,
+    "files": [],
+    "times": [],
+    "findingFiles": []
+  },
+  "_meta": {
+    "version": "0.8.145",
+    "latestVersion": "0.8.145",
+    "updateAvailable": false
+  }
+}

@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Orbit — brag</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script src="assets/music/audio-data.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0e1117; }
+      #root { position: relative; width: 100%; height: 100%; font-family: "Segoe UI", system-ui, sans-serif; }
+      .clip { position: absolute; inset: 0; }
+      .scene-inner { position: absolute; inset: 0; }
+
+      /* ---- global background layers ---- */
+      #bg {
+        position: absolute; inset: 0; z-index: 0;
+        background: radial-gradient(1300px 900px at 50% 42%, #141a28 0%, #0e1117 62%, #0b0e14 100%);
+      }
+      #bg-glow {
+        position: absolute; inset: 0; z-index: 1; opacity: 0.1;
+        background: radial-gradient(640px 460px at 50% 42%, rgba(79, 156, 255, 0.5) 0%, rgba(79, 156, 255, 0) 72%);
+      }
+      .ghost-ring {
+        position: absolute; border-radius: 50%;
+        border: 2px dashed rgba(139, 148, 167, 0.16);
+      }
+      #gr1 { width: 720px; height: 720px; left: 600px; top: 180px; opacity: 0.35; z-index: 1; }
+      #gr2 { width: 600px; height: 600px; left: 660px; top: 240px; opacity: 0.22; z-index: 1; }
+
+      /* ---- scene 1 ---- */
+      #s1 { z-index: 10; }
+      #s1-headline {
+        position: absolute; left: 120px; top: 128px; z-index: 5;
+        color: #e8ecf4; font-size: 72px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.12;
+        max-width: 900px;
+      }
+      #s1-headline .dim { color: #8b94a7; }
+
+      /* ---- radial menu (shared, faithful to overlay.css) ---- */
+      .radial-wrap { position: absolute; }
+      .radial-backdrop {
+        position: absolute; border-radius: 50%;
+        background: radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 0.05), rgba(13, 16, 24, 0.92) 68%);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+      }
+      .radial-deadzone {
+        position: absolute; border-radius: 50%;
+        border: 2px dashed rgba(255, 255, 255, 0.16); opacity: 0;
+      }
+      .radial-tile {
+        position: absolute; border-radius: 26%; z-index: 2;
+        background: rgba(255, 255, 255, 0.07);
+        border: 2px solid rgba(255, 255, 255, 0.14);
+        display: grid; place-items: center;
+      }
+      .radial-tile .glyph {
+        font-family: "JetBrains Mono", monospace; font-weight: 700; color: #e8ecf4;
+      }
+      .sel-ring {
+        position: absolute; border-radius: 50%; z-index: 1;
+        border: 4px solid rgba(99, 165, 255, 0.95); opacity: 0;
+        box-shadow: 0 0 30px rgba(79, 156, 255, 0.5), inset 0 0 14px rgba(79, 156, 255, 0.28);
+      }
+      .cursor-dot {
+        position: absolute; border-radius: 50%;
+        background: rgba(99, 165, 255, 0.95);
+        box-shadow: 0 0 10px rgba(79, 156, 255, 0.5);
+      }
+      .item-label {
+        position: absolute; width: 340px; display: flex; justify-content: center; opacity: 0;
+      }
+      .item-label .pill {
+        padding: 8px 26px; border-radius: 999px; white-space: nowrap;
+        font-size: 27px; font-weight: 600; color: #eef2fa;
+        background: rgba(9, 12, 19, 0.88); border: 2px solid rgba(255, 255, 255, 0.14);
+      }
+      .burst {
+        position: absolute; border-radius: 50%; opacity: 0;
+        border: 4px solid rgba(99, 165, 255, 0.9);
+        box-shadow: 0 0 34px rgba(79, 156, 255, 0.5);
+      }
+
+      /* ---- scene 2 ---- */
+      #s2 { z-index: 20; }
+      #s2-headline {
+        position: absolute; left: 120px; top: 118px; z-index: 5;
+        color: #e8ecf4; font-size: 50px; font-weight: 700; letter-spacing: -0.02em;
+      }
+      .app-card {
+        position: absolute; border-radius: 16px; overflow: hidden;
+        background: #131826; border: 2px solid #273044;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+      }
+      .app-card .bar {
+        height: 52px; background: #0b0e14; display: flex; align-items: center; gap: 12px; padding: 0 22px;
+        border-bottom: 2px solid #1d2330;
+      }
+      .app-card .dot { width: 16px; height: 16px; border-radius: 50%; }
+      .app-card .bar .t { font-size: 22px; font-weight: 600; color: #aab3c7; margin-left: 14px; }
+      .app-card .body { padding: 34px; display: flex; align-items: center; gap: 30px; }
+      .app-card .mono {
+        width: 110px; height: 110px; border-radius: 24px; flex: none;
+        display: grid; place-items: center;
+        font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 44px; color: #0e1117;
+      }
+      .app-card .lines { flex: 1; }
+      .app-card .lines .ln { height: 16px; border-radius: 8px; background: #273044; margin-bottom: 18px; }
+      .app-card .lines .ln.w2 { width: 62%; }
+
+      /* ---- scene 3 ---- */
+      #s3 { z-index: 30; }
+      #s3-veil { position: absolute; inset: 0; background: #06080d; opacity: 0; }
+      #editor {
+        position: absolute; left: 160px; top: 90px; width: 1600px; height: 860px;
+        border-radius: 16px; background: #131826; border: 2px solid #273044;
+        box-shadow: 0 40px 110px rgba(0, 0, 0, 0.55); overflow: hidden;
+      }
+      #editor .bar {
+        height: 52px; background: #0b0e14; display: flex; align-items: center; gap: 12px; padding: 0 22px;
+        border-bottom: 2px solid #1d2330;
+      }
+      #editor .dot { width: 16px; height: 16px; border-radius: 50%; }
+      #editor .bar .t { font-size: 22px; color: #8b94a7; margin-left: 14px; font-weight: 600; }
+      #editor .cols { display: flex; height: 806px; }
+      #editor .side {
+        width: 250px; flex: none; background: #0b0e14; border-right: 2px solid #1d2330; padding: 26px 18px;
+      }
+      #editor .side .f {
+        font-family: "JetBrains Mono", monospace; font-size: 21px; color: #8b94a7;
+        padding: 12px 14px; border-radius: 8px; margin-bottom: 6px;
+      }
+      #editor .side .f.on { background: #1b2130; color: #e8ecf4; }
+      #editor .code { flex: 1; padding: 34px 44px; font-family: "JetBrains Mono", monospace; font-size: 22px; line-height: 2; }
+      #editor .code .cl { white-space: nowrap; }
+      #editor .kw { color: #7c6bff; } #editor .str { color: #3ecf8e; }
+      #editor .cm { color: #8b94a7; } #editor .pl { color: #aab3c7; } #editor .fn { color: #4f9cff; }
+      #s3-caption {
+        position: absolute; left: 0; top: 964px; width: 1920px; display: flex; justify-content: center; opacity: 0;
+      }
+      #s3-caption .txt {
+        font-size: 42px; font-weight: 600; color: #e8ecf4; letter-spacing: -0.01em;
+        background: rgba(9, 12, 19, 0.82); border: 2px solid rgba(255, 255, 255, 0.12);
+        border-radius: 999px; padding: 16px 44px;
+      }
+
+      /* ---- scene 4 ---- */
+      #s4 { z-index: 40; }
+      #s4-ringwrap { position: absolute; left: 750px; top: 260px; width: 420px; height: 420px; }
+      #s4-ring { filter: drop-shadow(0 0 30px rgba(79, 156, 255, 0.4)); }
+      #s4-wordmark {
+        position: absolute; left: 760px; top: 398px; width: 400px; text-align: center;
+        font-size: 96px; font-weight: 700; color: #e8ecf4; letter-spacing: -0.03em; opacity: 0;
+      }
+      #s4-tagline {
+        position: absolute; left: 0; top: 748px; width: 1920px; display: flex; justify-content: center; opacity: 0;
+      }
+      #s4-tagline .txt { font-size: 38px; font-weight: 600; color: #aab3c7; letter-spacing: 0.01em; }
+      #s4-footer {
+        position: absolute; left: 0; top: 812px; width: 1920px; display: flex; justify-content: center; opacity: 0;
+      }
+      #s4-footer .txt { font-size: 24px; color: #8b94a7; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="orbit-brag" data-start="0" data-width="1920" data-height="1080" data-duration="20">
+      <div id="bg"></div>
+      <div id="bg-glow"></div>
+      <div class="ghost-ring" id="gr1"></div>
+      <div class="ghost-ring" id="gr2"></div>
+
+      <!-- Scene 1: Hold (0.0-4.0) -->
+      <section id="s1" class="clip" data-start="0" data-duration="4" data-track-index="1">
+        <div class="scene-inner" id="s1-inner">
+          <div id="s1-headline">One button. Every app.</div>
+          <div id="s1-menu" class="radial-wrap"></div>
+          <div id="s1-dot" class="cursor-dot"></div>
+        </div>
+      </section>
+
+      <!-- Scene 2: Flick (3.8-9.5) -->
+      <section id="s2" class="clip" data-start="3.8" data-duration="5.7" data-track-index="2">
+        <div class="scene-inner" id="s2-inner">
+          <div id="s2-headline">Flick.</div>
+          <div id="s2-menu" class="radial-wrap"></div>
+          <div id="s2-dot" class="cursor-dot"></div>
+          <div id="s2-label-chrome" class="item-label"><div class="pill">Chrome</div></div>
+          <div id="s2-label-spotify" class="item-label"><div class="pill">Spotify</div></div>
+          <div id="s2-burst" class="burst"></div>
+          <div id="s2-card" class="app-card">
+            <div class="bar">
+              <div class="dot" style="background:#ff5f6d"></div><div class="dot" style="background:#ffb44f"></div><div class="dot" style="background:#3ecf8e"></div>
+              <div class="t">Spotify</div>
+            </div>
+            <div class="body">
+              <div class="mono" style="background:#3ecf8e">SP</div>
+              <div class="lines"><div class="ln"></div><div class="ln w2"></div><div class="ln w2"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Scene 3: Anywhere (9.3-15.1) -->
+      <section id="s3" class="clip" data-start="9.3" data-duration="5.8" data-track-index="3">
+        <div class="scene-inner" id="s3-inner">
+          <div id="editor">
+            <div class="bar">
+              <div class="dot" style="background:#ff5f6d"></div><div class="dot" style="background:#ffb44f"></div><div class="dot" style="background:#3ecf8e"></div>
+              <div class="t">editor — release notes</div>
+            </div>
+            <div class="cols">
+              <div class="side">
+                <div class="f on">orbit.rs</div>
+                <div class="f">menu.rs</div>
+                <div class="f">mouse.rs</div>
+                <div class="f">selection.rs</div>
+                <div class="f">config.rs</div>
+                <div class="f">overlay.rs</div>
+              </div>
+              <div class="code">
+                <div class="cl"><span class="cm">// radial launcher — native win32 hook</span></div>
+                <div class="cl"><span class="kw">let</span> <span class="pl">menu</span> = <span class="fn">open_at</span>(<span class="pl">cursor</span>);</div>
+                <div class="cl"><span class="kw">let</span> <span class="pl">sector</span> = <span class="fn">select</span>(<span class="pl">angle</span>, <span class="pl">hysteresis</span>);</div>
+                <div class="cl"><span class="pl">overlay</span>.<span class="fn">show</span>(<span class="str">"no-activate"</span>);</div>
+                <div class="cl"><span class="kw">on</span> <span class="pl">release</span> => <span class="fn">launch</span>(<span class="pl">sector</span>.<span class="pl">app</span>);</div>
+                <div class="cl"><span class="pl">menu</span>.<span class="fn">close_instant</span>();</div>
+                <div class="cl"><span class="cm">// zero focus steal, any monitor, any DPI</span></div>
+              </div>
+            </div>
+          </div>
+          <div id="s3-menu" class="radial-wrap"></div>
+          <div id="s3-dot" class="cursor-dot"></div>
+          <div id="s3-label-vscode" class="item-label"><div class="pill">VS Code</div></div>
+          <div id="s3-burst" class="burst"></div>
+          <div id="s3-card" class="app-card">
+            <div class="bar">
+              <div class="dot" style="background:#ff5f6d"></div><div class="dot" style="background:#ffb44f"></div><div class="dot" style="background:#3ecf8e"></div>
+              <div class="t">VS Code</div>
+            </div>
+            <div class="body">
+              <div class="mono" style="background:#4f9cff">&#60;/&#62;</div>
+              <div class="lines"><div class="ln"></div><div class="ln w2"></div><div class="ln w2"></div></div>
+            </div>
+          </div>
+          <div id="s3-caption"><div class="txt">Anywhere. Even over another app.</div></div>
+        </div>
+      </section>
+
+      <!-- Scene 4: The ring (14.5-20.0) -->
+      <section id="s4" class="clip" data-start="14.5" data-duration="5.5" data-track-index="4">
+        <div class="scene-inner" id="s4-inner">
+          <svg id="s4-ringwrap" viewBox="0 0 420 420">
+            <defs>
+              <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#4f9cff" />
+                <stop offset="0.28" stop-color="#7c6bff" />
+                <stop offset="0.52" stop-color="#3ecf8e" />
+                <stop offset="0.76" stop-color="#ffb44f" />
+                <stop offset="1" stop-color="#ff5f6d" />
+              </linearGradient>
+            </defs>
+            <circle id="s4-ring" cx="210" cy="210" r="160" fill="none" stroke="url(#ringGrad)" stroke-width="27" stroke-linecap="round" stroke-dasharray="1005.31" stroke-dashoffset="1005.31" />
+          </svg>
+          <div id="s4-wordmark">Orbit</div>
+          <div id="s4-tagline"><div class="txt">Hold. Flick. Release.</div></div>
+          <div id="s4-footer"><div class="txt">a radial launcher for Windows</div></div>
+        </div>
+      </section>
+
+      <!-- Audio -->
+      <audio id="music" src="assets/music/happy-beats-business-moves-vol-12-by-ende-dot-app.mp3" data-start="0" data-duration="20" data-track-index="10" data-volume="0.35" data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":1},{"t":18.2,"v":1},{"t":19.9,"v":0}]}]}'></audio>
+      <audio id="sfx-click-1" src="assets/sfx/interface/click_003.ogg" data-start="1.60" data-track-index="11" data-volume="0.5"></audio>
+      <audio id="sfx-bloom-1" src="assets/sfx/impact/impactSoft_medium_000.ogg" data-start="1.66" data-track-index="12" data-volume="0.45"></audio>
+      <audio id="sfx-snap-1" src="assets/sfx/ui/rollover2.ogg" data-start="5.34" data-track-index="13" data-volume="0.4"></audio>
+      <audio id="sfx-snap-2" src="assets/sfx/ui/rollover2.ogg" data-start="6.56" data-track-index="14" data-volume="0.4"></audio>
+      <audio id="sfx-release-1" src="assets/sfx/impact/impactSoft_medium_004.ogg" data-start="8.70" data-track-index="15" data-volume="0.5"></audio>
+      <audio id="sfx-click-2" src="assets/sfx/interface/click_003.ogg" data-start="10.33" data-track-index="16" data-volume="0.5"></audio>
+      <audio id="sfx-bloom-2" src="assets/sfx/impact/impactSoft_medium_000.ogg" data-start="10.43" data-track-index="17" data-volume="0.45"></audio>
+      <audio id="sfx-snap-3" src="assets/sfx/ui/rollover2.ogg" data-start="12.02" data-track-index="18" data-volume="0.4"></audio>
+      <audio id="sfx-release-2" src="assets/sfx/impact/impactSoft_medium_004.ogg" data-start="13.07" data-track-index="19" data-volume="0.5"></audio>
+      <audio id="sfx-logo" src="assets/sfx/interface/bong_001.ogg" data-start="17.44" data-track-index="20" data-volume="0.4"></audio>
+    </div>
+
+    <script>
+      // ---------- geometry (precomputed, mirrors lib/geometry.ts) ----------
+      var COUNT = 8;
+      var APPS = ["</>", "SP", "DC", "CR", "FG", "ST", ">_", "NP"];
+      var COLORS = ["#4f9cff", "#3ecf8e", "#7c6bff", "#ffb44f", "#ff5f6d", "#4f9cff", "#8b94a7", "#e8ecf4"];
+      function pos(i, cx, cy, r) {
+        var a = (-90 + i * 45) * Math.PI / 180;
+        return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+      }
+      var MENUS = {
+        s1: { el: "s1-menu", cx: 960, cy: 600, r: 240, tile: 92, glyph: 34 },
+        s2: { el: "s2-menu", cx: 960, cy: 585, r: 330, tile: 124, glyph: 44 },
+        s3: { el: "s3-menu", cx: 1400, cy: 560, r: 230, tile: 88, glyph: 30 },
+      };
+      var built = {};
+      Object.keys(MENUS).forEach(function (k) {
+        var m = MENUS[k];
+        var wrap = document.getElementById(m.el);
+        var W = 2 * (m.r + m.tile);
+        wrap.style.width = W + "px";
+        wrap.style.height = W + "px";
+        wrap.style.left = m.cx - W / 2 + "px";
+        wrap.style.top = m.cy - W / 2 + "px";
+        var bd = document.createElement("div");
+        bd.className = "radial-backdrop";
+        bd.style.width = W + "px"; bd.style.height = W + "px";
+        wrap.appendChild(bd);
+        var dz = document.createElement("div");
+        dz.className = "radial-deadzone";
+        var dzW = Math.round(m.r * 0.8);
+        dz.style.width = dzW + "px"; dz.style.height = dzW + "px";
+        dz.style.left = W / 2 - dzW / 2 + "px"; dz.style.top = W / 2 - dzW / 2 + "px";
+        wrap.appendChild(dz);
+        var tiles = [];
+        for (var i = 0; i < COUNT; i++) {
+          var p = pos(i, m.cx, m.cy, m.r);
+          var t = document.createElement("div");
+          t.className = "radial-tile";
+          t.style.width = m.tile + "px"; t.style.height = m.tile + "px";
+          t.style.left = p.x - m.tile / 2 - (m.cx - W / 2) + "px";
+          t.style.top = p.y - m.tile / 2 - (m.cy - W / 2) + "px";
+          var g = document.createElement("div");
+          g.className = "glyph";
+          g.textContent = APPS[i];
+          g.style.color = COLORS[i];
+          g.style.fontSize = m.glyph + "px";
+          t.appendChild(g);
+          wrap.appendChild(t);
+          tiles.push(t);
+        }
+        var ring = document.createElement("div");
+        ring.className = "sel-ring";
+        var rs = m.tile + 22;
+        ring.style.width = rs + "px"; ring.style.height = rs + "px";
+        ring.style.left = W / 2 - rs / 2 + "px";
+        ring.style.top = W / 2 - rs / 2 + "px";
+        wrap.appendChild(ring);
+        built[k] = { wrap: wrap, backdrop: bd, deadzone: dz, tiles: tiles, ring: ring, m: m };
+      });
+
+      // cursor dots: base left/top at menu center, GSAP x/y offsets
+      var DOT = { s1: 15, s2: 17, s3: 14 };
+      Object.keys(MENUS).forEach(function (k) {
+        var d = document.getElementById(k + "-dot");
+        var m = MENUS[k];
+        d.style.width = DOT[k] + "px"; d.style.height = DOT[k] + "px";
+        d.style.left = m.cx - DOT[k] / 2 + "px";
+        d.style.top = m.cy - DOT[k] / 2 + "px";
+        d.style.zIndex = 6;
+      });
+
+      // bursts at fixed positions
+      document.getElementById("s2-burst").style.cssText += "left:920px;top:545px;width:80px;height:80px;";
+      var vsc = pos(0, 1400, 560, 230);
+      document.getElementById("s3-burst").style.cssText += "left:" + (vsc.x - 40) + "px;top:" + (vsc.y - 40) + "px;width:80px;height:80px;";
+
+      // labels under selected tiles
+      function labelAt(id, p) {
+        var el = document.getElementById(id);
+        el.style.left = p.x - 170 + "px";
+        el.style.top = p.y + 76 + "px";
+      }
+      labelAt("s2-label-chrome", pos(3, 960, 585, 330));
+      labelAt("s2-label-spotify", pos(1, 960, 585, 330));
+      labelAt("s3-label-vscode", pos(0, 1400, 560, 230));
+
+      // ---------- one paused timeline ----------
+      var tl = gsap.timeline({ paused: true });
+      var SEL_BORDER = "rgba(99,165,255,0.95)", SEL_BG = "rgba(79,156,255,0.2)";
+      var DEF_BORDER = "rgba(255,255,255,0.14)", DEF_BG = "rgba(255,255,255,0.07)";
+
+      // ambient ghost rings (finite, linear)
+      tl.to("#gr1", { rotation: 32, duration: 20, ease: "none" }, 0);
+      tl.to("#gr2", { rotation: -22, duration: 20, ease: "none" }, 0);
+
+      // ===== Scene 1: Hold =====
+      tl.fromTo("#s1-headline", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, 0.30);
+      tl.fromTo("#s1-dot", { x: -320, y: 180 }, { x: 0, y: 0, duration: 1.3, ease: "power1.inOut" }, 0.10);
+      // beat-grid: press at 1.64s beat
+      tl.to("#s1-dot", { scaleY: 0.55, duration: 0.09, ease: "power2.in" }, 1.64);
+      tl.to("#s1-dot", { scaleY: 1, duration: 0.14, ease: "power2.out" }, 1.73);
+      tl.fromTo(built.s1.backdrop, { scale: 0.35, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "power2.out" }, 1.64);
+      tl.fromTo(built.s1.tiles, { scale: 0.35, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "power3.out", stagger: 0.045 }, 1.78);
+      tl.to(built.s1.deadzone, { opacity: 1, duration: 0.3 }, 1.95);
+      tl.to("#s1-inner", { opacity: 0, duration: 0.45, ease: "power1.inOut" }, 3.55);
+
+      // ===== Scene 2: Flick =====
+      tl.fromTo("#s2-inner", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.out" }, 3.85);
+      tl.fromTo("#s2-headline", { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 4.20);
+      // beat-grid: flick 1 at 5.34s beat -> Chrome
+      tl.to("#s2-dot", { x: 233.3, y: 187.3, duration: 0.28, ease: "power2.inOut" }, 5.34);
+      tl.fromTo(built.s2.ring, { x: 0, y: 0, scale: 0.92, opacity: 0 }, { x: 233.3, y: 233.3, scale: 1, opacity: 1, duration: 0.15, ease: "power2.out" }, 5.50);
+      tl.to(built.s2.tiles[3], { scale: 1.16, borderColor: SEL_BORDER, backgroundColor: SEL_BG, duration: 0.15, ease: "power2.out" }, 5.50);
+      tl.fromTo("#s2-label-chrome", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" }, 5.65);
+      tl.to("#s2-label-chrome", { opacity: 0, duration: 0.2 }, 6.45);
+      // beat-grid: flick 2 at 6.56s beat -> Spotify
+      tl.to("#s2-dot", { x: 233.3, y: -279.3, duration: 0.28, ease: "power2.inOut" }, 6.56);
+      tl.to(built.s2.ring, { x: 233.3, y: -233.3, duration: 0.15, ease: "power2.out" }, 6.72);
+      tl.to(built.s2.tiles[3], { scale: 1, borderColor: DEF_BORDER, backgroundColor: DEF_BG, duration: 0.15 }, 6.72);
+      tl.to(built.s2.tiles[1], { scale: 1.16, borderColor: SEL_BORDER, backgroundColor: SEL_BG, duration: 0.15, ease: "power2.out" }, 6.72);
+      tl.fromTo("#s2-label-spotify", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" }, 6.87);
+      // beat-locked: release at 8.74s strong cue — menu vanishes instantly
+      tl.to("#s2-menu", { scale: 0.72, opacity: 0, duration: 0.16, ease: "power2.in" }, 8.74);
+      tl.to("#s2-dot", { opacity: 0, duration: 0.1 }, 8.74);
+      tl.fromTo("#s2-burst", { scale: 0.2, opacity: 0.85 }, { scale: 2.4, opacity: 0, duration: 0.5, ease: "power2.out" }, 8.74);
+      tl.fromTo("#s2-card", { scale: 0.6, opacity: 0, y: 30 }, { scale: 1, opacity: 1, y: 0, duration: 0.35, ease: "back.out(1.6)" }, 8.78);
+      tl.to("#s2-inner", { opacity: 0, duration: 0.35, ease: "power1.inOut" }, 9.15);
+
+      // ===== Scene 3: Anywhere =====
+      tl.fromTo("#s3-inner", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.out" }, 9.35);
+      tl.fromTo("#editor", { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 9.40);
+      // beat-grid: press at 10.37s beat
+      tl.to("#s3-dot", { scaleY: 0.55, duration: 0.09, ease: "power2.in" }, 10.37);
+      tl.to("#s3-dot", { scaleY: 1, duration: 0.14, ease: "power2.out" }, 10.46);
+      tl.fromTo(built.s3.backdrop, { scale: 0.35, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.33, ease: "power2.out" }, 10.37);
+      tl.fromTo(built.s3.tiles, { scale: 0.35, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "power3.out", stagger: 0.045 }, 10.50);
+      tl.to(built.s3.deadzone, { opacity: 1, duration: 0.3 }, 10.60);
+      // beat-grid: flick at 12.02s beat -> VS Code (top)
+      tl.to("#s3-dot", { x: 0, y: -262, duration: 0.26, ease: "power2.inOut" }, 12.02);
+      tl.fromTo(built.s3.ring, { x: 0, y: 0, scale: 0.92, opacity: 0 }, { x: 0, y: -230, scale: 1, opacity: 1, duration: 0.15, ease: "power2.out" }, 12.18);
+      tl.to(built.s3.tiles[0], { scale: 1.16, borderColor: SEL_BORDER, backgroundColor: SEL_BG, duration: 0.15, ease: "power2.out" }, 12.18);
+      tl.fromTo("#s3-label-vscode", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" }, 12.28);
+      tl.fromTo("#s3-caption", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 12.40);
+      // beat-locked: release at 13.11s strong cue
+      tl.to("#s3-menu", { scale: 0.72, opacity: 0, duration: 0.15, ease: "power2.in" }, 13.11);
+      tl.to("#s3-dot", { opacity: 0, duration: 0.1 }, 13.11);
+      tl.fromTo("#s3-burst", { scale: 0.2, opacity: 0.85 }, { scale: 2.4, opacity: 0, duration: 0.5, ease: "power2.out" }, 13.11);
+      tl.fromTo("#s3-card", { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.5)" }, 13.15);
+      tl.to("#s3-label-vscode", { opacity: 0, duration: 0.2 }, 13.2);
+      tl.to("#s3-inner", { opacity: 0, duration: 0.4, ease: "power1.inOut" }, 14.70);
+
+      // ===== Scene 4: The ring =====
+      tl.fromTo("#s4-inner", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.out" }, 14.55);
+      tl.to("#s4-ring", { attr: { "stroke-dashoffset": 0 }, duration: 1.5, ease: "power1.inOut" }, 15.10);
+      tl.to("#s4-ringwrap", { rotation: 8, duration: 5.5, ease: "none" }, 14.5);
+      // beat-locked: wordmark at 17.47s strong cue
+      tl.fromTo("#s4-wordmark", { y: 28, opacity: 0, scale: 0.97 }, { y: 0, opacity: 1, scale: 1, duration: 0.5, ease: "power3.out" }, 17.47);
+      // beat-grid: tagline at 18.56s beat
+      tl.fromTo("#s4-tagline", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 18.56);
+      tl.to("#s4-footer", { opacity: 1, duration: 0.35 }, 18.75);
+
+      // ===== audio-reactive: bg glow breathes with bass =====
+      var glow = document.getElementById("bg-glow");
+      var FR = AUDIO_DATA.frames, AFPS = AUDIO_DATA.fps;
+      var N = Math.min(Math.round(20 * AFPS), FR.length);
+      for (var f = 0; f < N; f++) {
+        tl.call(
+          (function (fr) {
+            return function () {
+              var b = fr.bands[0];
+              gsap.set(glow, { opacity: 0.07 + b * 0.13, scale: 1 + b * 0.05 });
+            };
+          })(FR[f]),
+          [],
+          f / AFPS
+        );
+      }
+
+      window.__timelines["orbit-brag"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
