@@ -138,9 +138,21 @@ pub fn start_simulation_listener() {
                 let kind = v.get("kind").and_then(|k| k.as_str()).unwrap_or_default();
                 let x = v.get("x").and_then(|k| k.as_i64()).unwrap_or(0) as i32;
                 let y = v.get("y").and_then(|k| k.as_i64()).unwrap_or(0) as i32;
-                crate::logger::info(&format!("sim event: kind={kind} at ({x},{y})"));
-                let _ = v;
                 match kind {
+                    "list-apps" => {
+                        let apps = crate::scanner::scan_installed_apps();
+                        crate::logger::info(&format!(
+                            "sim: catalog has {} apps; first 5: [{}]",
+                            apps.len(),
+                            apps.iter()
+                                .take(5)
+                                .map(|a| a.name.clone())
+                                .collect::<Vec<_>>()
+                                .join(", ")
+                        ));
+                        let _ = (x, y);
+                        continue;
+                    }
                     "down" => {
                         handle_trigger((x, y), true, TriggerButton::Middle);
                     }
@@ -155,6 +167,8 @@ pub fn start_simulation_listener() {
                     }
                     _ => {}
                 }
+                crate::logger::info(&format!("sim event: kind={kind} at ({x},{y})"));
+                let _ = v;
             }
         })
         .ok();

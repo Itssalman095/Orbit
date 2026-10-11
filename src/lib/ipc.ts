@@ -6,7 +6,7 @@
  */
 
 import { invoke } from "@tauri-apps/api/core";
-import type { Config, ConfigResponse } from "../types/config";
+import type { AvailableApp, Config, ConfigResponse } from "../types/config";
 
 export const ipc = {
   loadConfig: (): Promise<ConfigResponse> => invoke("load_config"),
@@ -28,6 +28,9 @@ export const ipc = {
 
   /** Launches a configured application by id (validated backend-side). */
   launchApp: (appId: string): Promise<void> => invoke("launch_application", { appId }),
+
+  /** Installed-app catalog (Start Menu + Desktop shortcuts). */
+  listAvailableApps: (): Promise<AvailableApp[]> => invoke("list_available_apps"),
 
   /** Checks existence of each path, used to flag missing executables. */
   checkPaths: (paths: string[]): Promise<boolean[]> => invoke("check_paths", { paths }),

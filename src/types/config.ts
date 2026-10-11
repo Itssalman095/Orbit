@@ -93,3 +93,10 @@ export interface LaunchErrorPayload {
   appName: string;
   message: string;
 }
+
+/** An installed app discovered in the Start Menu / Desktop (a .lnk shortcut). */
+export interface AvailableApp {
+  id: string;
+  name: string;
+  path: string;
+}

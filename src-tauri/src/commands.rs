@@ -222,6 +222,13 @@ pub fn check_paths(paths: Vec<String>) -> Vec<bool> {
     paths.iter().map(|p| Path::new(p).is_file()).collect()
 }
 
+/// Installed-app catalog for the "add application" picker
+/// (Start Menu + Desktop shortcuts, deduplicated).
+#[tauri::command]
+pub fn list_available_apps() -> Result<Vec<crate::scanner::AvailableApp>, IpcError> {
+    Ok(crate::scanner::scan_installed_apps())
+}
+
 /// Launches a configured application by id. The frontend can never pass an
 /// arbitrary executable: only stored, validated entries can be launched.
 #[tauri::command]

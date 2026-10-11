@@ -5,6 +5,7 @@
 
 import { useMemo, useState } from "react";
 import { Field, Select, Slider, TextField, Toggle } from "../components/controls";
+import { AppCatalog } from "../components/AppCatalog";
 import { ApplicationPicker } from "../components/ApplicationPicker";
 import { RadialMenu } from "../components/RadialMenu";
 import { useAppIcons } from "../hooks/useAppIcons";
@@ -206,19 +207,21 @@ export function ApplicationsSection({
   onToast,
 }: ApplicationsSectionProps) {
   const icons = useAppIcons(applications);
+  const [catalogOpen, setCatalogOpen] = useState(false);
 
-  const addApp = (path: string) => {
+  const addApp = (path: string, providedName?: string) => {
     if (applications.some((a) => a.executablePath.toLowerCase() === path.toLowerCase())) {
       onToast("That application is already in the list.");
       return;
     }
     const app: LauncherApp = {
       id: crypto.randomUUID(),
-      name: nameFromPath(path),
+      name: (providedName ?? "").trim() || nameFromPath(path),
       executablePath: path,
       enabled: true,
     };
     onApplicationsChange([...applications, app]);
+    onToast(`Added ${app.name}`);
   };
 
   const update = (id: string, patch: Partial<LauncherApp>) => {
@@ -237,6 +240,11 @@ export function ApplicationsSection({
     onApplicationsChange(next);
   };
 
+  const addedPaths = useMemo(
+    () => new Set(applications.map((a) => a.executablePath.toLowerCase())),
+    [applications],
+  );
+
   return (
     <div className="section">
       <div className="section-head">
@@ -246,13 +254,40 @@ export function ApplicationsSection({
             Items shown in the radial menu, in order. Disabled apps are skipped.
           </p>
         </div>
-        <ApplicationPicker kind="executable" label="Add application…" onPicked={addApp} />
+        <div className="section-head-actions">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => setCatalogOpen(true)}
+          >
+            ＋ Add application
+          </button>
+          <ApplicationPicker
+            kind="executable"
+            label="Browse for a file…"
+            onPicked={(p) => addApp(p)}
+          />
+        </div>
       </div>
 
       {applications.length === 0 ? (
         <div className="empty-state">
           <div className="empty-title">No applications yet</div>
-          <div>Add your favorite programs with the button above.</div>
+          <div>Add your favorite programs — they'll appear in the radial menu.</div>
+          <div className="empty-actions">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => setCatalogOpen(true)}
+            >
+              Pick from your installed apps
+            </button>
+            <ApplicationPicker
+              kind="executable"
+              label="…or browse for a file"
+              onPicked={(p) => addApp(p)}
+            />
+          </div>
         </div>
       ) : (
         <ul className="app-list">
@@ -277,6 +312,14 @@ export function ApplicationsSection({
           ))}
         </ul>
       )}
+
+      {catalogOpen ? (
+        <AppCatalog
+          addedPaths={addedPaths}
+          onAdd={(path, name) => addApp(path, name)}
+          onClose={() => setCatalogOpen(false)}
+        />
+      ) : null}
     </div>
   );
 }

@@ -13,6 +13,7 @@ Hold the middle mouse button anywhere in Windows, move toward an application, re
 - **Native launching** — apps are started via Win32 process APIs (`CreateProcess`/`ShellExecuteEx` for `.lnk`), with arguments and working directories. Missing or permission-restricted executables are reported gracefully.
 - **Real icons** — icons are extracted from the executables/shortcuts with `IShellItemImageFactory` and cached.
 - **Settings window** — General, Appearance (with live preview), Applications (add/remove/reorder/edit/enable), Behavior and About.
+- **Easy app adding** — "Add application" opens a searchable catalog of your installed apps (scanned from the Start Menu and Desktop, with real icons); click to add. A native file picker remains for portable apps.
 - **System tray** — open settings, enable/disable, reload configuration, about, quit.
 - **Start with Windows** — per-user Run key (HKCU), no admin rights.
 - **Multi-monitor & DPI aware** — Per-Monitor V2; all coordinates are physical pixels; the menu is clamped to the monitor work area.

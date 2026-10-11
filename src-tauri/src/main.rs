@@ -22,6 +22,7 @@ mod logger;
 mod menu;
 mod mouse;
 mod overlay;
+mod scanner;
 mod selection;
 mod state;
 mod tray;
@@ -179,6 +180,7 @@ fn main() {
             commands::pick_directory,
             commands::get_app_icon,
             commands::check_paths,
+            commands::list_available_apps,
             commands::launch_application,
             commands::quit_app
         ])
